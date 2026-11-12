@@ -1,0 +1,38 @@
+name: shell-demo-check
+
+on:
+  push:
+    paths:
+      - "prototype/shell-demo/**"
+      - ".github/workflows/shell-demo-check.yml"
+  pull_request:
+    paths:
+      - "prototype/shell-demo/**"
+      - ".github/workflows/shell-demo-check.yml"
+
+jobs:
+  static-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate HTML structure and local assets
+        working-directory: prototype/shell-demo
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          class Check(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.errors = []
+              def error(self, message):
+                  self.errors.append(message)
+          p = Check()
+          html = Path("index.html").read_text()
+          p.feed(html)
+          p.close()
+          assert "<title>" in html.lower(), "missing page title"
+          assert Path("wallpaper.svg").is_file(), "missing wallpaper asset"
+          assert "AI" not in html, "avoid embedding AI-generated claims into the demo UI"
+          print("Shell concept HTML parsed; local wallpaper exists.")
+          PY
