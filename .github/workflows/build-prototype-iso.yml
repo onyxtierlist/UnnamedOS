@@ -26,9 +26,11 @@ jobs:
         working-directory: prototype/live-build
         run: |
           sudo lb config \
+            --ignore-system-defaults \
             --distribution bookworm \
             --architectures amd64 \
             --binary-image iso-hybrid \
+            --linux-packages linux-image \
             --archive-areas "main contrib non-free-firmware" \
             --keyring-packages debian-archive-keyring \
             --mirror-bootstrap http://deb.debian.org/debian \
