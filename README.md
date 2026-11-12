@@ -54,7 +54,9 @@ See [prototype setup](prototype/compositor/README.md) for build prerequisites an
 
 ## Visual concept
 
-The desktop direction and original question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The visual shown there is an **AI-generated mockup for inspiration only**; it does **not** represent the real, implemented UNNAMED OS desktop. The actual OS is still an early compositor prototype.
+The desktop direction and original question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The illustration below is an **AI-generated mockup for inspiration only**; it does **not** represent the real, implemented UNNAMED OS desktop. The actual OS is still an early compositor prototype.
+
+![UNNAMED OS — AI-generated conceptual mockup](docs/design/mockup-desktop.svg).
 
 ## Documentation
 
