@@ -1,6 +1,6 @@
 # UNNAMED OS
 
-> **Light as Linux. Beautiful as Windows 11.**
+> **Lightweight at heart. Beautiful by design.**
 
 UNNAMED OS is an ambitious, Debian-based Linux distribution with an original desktop environment, a carefully engineered adaptive visual system, and deep user customization. The goal is not to reskin an existing desktop: it is to build a distinct, cohesive operating-system experience while reusing mature Linux infrastructure for hardware, networking, audio, security, and package management.
 
@@ -54,7 +54,7 @@ See [prototype setup](prototype/compositor/README.md) for build prerequisites an
 
 ## Visual concept
 
-The first original desktop direction and question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The SVG mockup is editable and explicitly a design illustration—not a running desktop screenshot.
+The desktop direction and original question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The visual shown there is an **AI-generated mockup for inspiration only**; it does **not** represent the real, implemented UNNAMED OS desktop. The actual OS is still an early compositor prototype.
 
 ## Documentation
 
@@ -76,7 +76,7 @@ The first original desktop direction and question-mark brand mark are in [Visual
 
 ## Current status
 
-Stage 0: planning and repository foundation. The next implementation milestone is a **Wayland compositor feasibility prototype** in a VM, followed by a minimal shell surface and measurable resource baseline.
+Stage 1: a nested Wayland compositor feasibility prototype is in the repository. The AI mockup is conceptual only; no finished desktop exists yet.
 
 ## License
 
