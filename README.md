@@ -52,6 +52,24 @@ The first compositor prototype lives in [`prototype/compositor`](prototype/compo
 
 See [prototype setup](prototype/compositor/README.md) for build prerequisites and run instructions.
 
+## Cumulative development branches
+
+Development is staged in cumulative branches. Each branch contains the prior stages plus its own stage work:
+
+| Branch | Includes |
+|---|---|
+| [stage-1-compositor](../../tree/stage-1-compositor) | Stage 0–1 |
+| [stage-2-shell](../../tree/stage-2-shell) | Stage 0–2 |
+| [stage-3-customization](../../tree/stage-3-customization) | Stage 0–3 |
+| [stage-4-services](../../tree/stage-4-services) | Stage 0–4 |
+| [stage-5-apps](../../tree/stage-5-apps) | Stage 0–5 |
+| [stage-6-iso](../../tree/stage-6-iso) | Stage 0–6 |
+| [stage-7-performance](../../tree/stage-7-performance) | Stage 0–7 |
+| [stage-8-alpha](../../tree/stage-8-alpha) | Stage 0–8 |
+| [stage-9-release](../../tree/stage-9-release) | Stage 0–9 |
+
+**Branch names are milestones, not proof of completion.** See each branch's stage docs and acceptance gates; hardware testing and release evidence are still required.
+
 ## Try the shell UI concept
 
 A browser-only interaction sandbox is available at [`prototype/shell-demo`](prototype/shell-demo). It is **not a native desktop or real OS**; its controls are simulated and its system metrics are illustrative.
