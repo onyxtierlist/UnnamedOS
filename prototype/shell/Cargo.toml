@@ -1,0 +1,9 @@
+[package]
+name = "unnamed-shell"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "UNNAMED OS GTK4 shell vertical-slice prototype"
+
+[dependencies]
+gtk = { version = "0.10", package = "gtk4" }
