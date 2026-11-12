@@ -52,6 +52,10 @@ The first compositor prototype lives in [`prototype/compositor`](prototype/compo
 
 See [prototype setup](prototype/compositor/README.md) for build prerequisites and run instructions.
 
+## Visual concept
+
+The first original desktop direction and question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The SVG mockup is editable and explicitly a design illustration—not a running desktop screenshot.
+
 ## Documentation
 
 - [Master blueprint](docs/BLUEPRINT.md)
