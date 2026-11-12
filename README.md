@@ -4,7 +4,7 @@
 
 UNNAMED OS is an ambitious, Debian-based Linux distribution with an original desktop environment, a carefully engineered adaptive visual system, and deep user customization. The goal is not to reskin an existing desktop: it is to build a distinct, cohesive operating-system experience while reusing mature Linux infrastructure for hardware, networking, audio, security, and package management.
 
-**Status:** Planning / Stage 0 — no functional OS or desktop exists yet. This repository is the source of truth for the project plan.
+**Status:** Stage 1 — compositor feasibility prototype. The project is still experimental and is not a bootable OS yet.
 
 ## Vision
 
@@ -45,6 +45,12 @@ These tiers are implementation profiles, not feature gates. The same desktop, co
 - **Packaging:** Debian packages; prototype image built with Debian live-build or another documented reproducible image pipeline.
 
 These are initial choices. Architecture decisions must be tested in small prototypes before they become irreversible.
+
+## Prototype
+
+The first compositor prototype lives in [`prototype/compositor`](prototype/compositor). It uses Smithay's nested Winit backend so it can be tested inside a normal desktop session/VM before attempting direct hardware access.
+
+See [prototype setup](prototype/compositor/README.md) for build prerequisites and run instructions.
 
 ## Documentation
 
