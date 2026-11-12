@@ -52,6 +52,10 @@ The first compositor prototype lives in [`prototype/compositor`](prototype/compo
 
 See [prototype setup](prototype/compositor/README.md) for build prerequisites and run instructions.
 
+## Try the shell UI concept
+
+A browser-only interaction sandbox is available at [`prototype/shell-demo`](prototype/shell-demo). It is **not a native desktop or real OS**; its controls are simulated and its system metrics are illustrative.
+
 ## Visual concept
 
 The desktop direction and original question-mark brand mark are in [Visual Concept](docs/VISUAL_CONCEPT.md). The illustration below is an **AI-generated mockup for inspiration only**; it does **not** represent the real, implemented UNNAMED OS desktop. The actual OS is still an early compositor prototype.

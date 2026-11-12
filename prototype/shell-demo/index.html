@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNNAMED OS — Shell UI Concept</title>
+<style>
+:root{color-scheme:dark;--accent:#48b9ff;--violet:#9b72ff;--ink:#edf5ff;--muted:#a8badc;--panel:rgba(12,22,52,.88);--line:rgba(145,180,255,.24)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#08112c url("wallpaper.svg") center/cover fixed;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:1px solid transparent;background:transparent}button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.desktop{height:100vh;padding:22px;display:flex;flex-direction:column}.brand{position:absolute;top:9%;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}.brand h1{font-weight:300;letter-spacing:.18em;font-size:clamp(28px,4vw,54px);margin:0}.brand p{color:var(--muted);font-size:clamp(12px,1.5vw,18px);margin:4px}
+.shortcuts{display:grid;gap:14px;width:86px}.shortcut{padding:8px 2px;border-radius:12px;display:grid;justify-items:center;gap:5px;color:#dce9ff;font-size:12px}.shortcut:hover{background:#ffffff18}.glyph{width:38px;height:38px;border-radius:10px;background:linear-gradient(145deg,#1c65ba,#42c5ff);display:grid;place-items:center;font-size:20px;box-shadow:0 8px 24px #158aff30}
+.panel{background:var(--panel);border:1px solid var(--line);box-shadow:0 24px 70px #0005,inset 0 1px #ffffff0c;backdrop-filter:blur(22px);border-radius:22px}
+.launcher{position:absolute;left:8%;bottom:94px;width:min(650px,84vw);padding:18px;display:none;grid-template-columns:155px 1fr;gap:16px;max-height:70vh;overflow:auto}.launcher.open{display:grid}.search{grid-column:1/-1;width:100%;padding:12px 15px;border-radius:14px;background:#ffffff08;border:1px solid var(--line);color:var(--ink)}.side{border-right:1px solid var(--line);padding-right:12px;display:grid;align-content:start;gap:5px}.side button,.app{padding:10px;border-radius:12px;text-align:left}.side button:hover,.app:hover{background:#3a68ba55}.apps h3{font-size:13px;color:var(--muted);font-weight:500;margin:4px 0 10px}.appgrid{display:grid;grid-template-columns:repeat(4,minmax(55px,1fr));gap:7px}.app{text-align:center;display:grid;justify-items:center;gap:7px;font-size:12px}.app .glyph{width:44px;height:44px}
+.widgets{margin-left:auto;display:grid;gap:12px;width:min(300px,28vw)}.widget{padding:18px}.clock{font-size:34px;font-weight:300}.sub{color:var(--muted)}.meter{height:8px;background:#ffffff16;border-radius:99px;overflow:hidden;margin:7px 0 13px}.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--violet));border-radius:99px}.quickrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #ffffff0a}.switch{width:36px;height:20px;border-radius:99px;background:#33415f;padding:3px}.switch:after{content:"";display:block;width:14px;height:14px;background:#b7c8e9;border-radius:50%;transition:.15s}.switch.on{background:#167ecb}.switch.on:after{transform:translateX(16px);background:white}
+.dock{position:absolute;bottom:16px;left:16px;right:16px;height:62px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px}.dock button{height:44px;width:44px;border-radius:12px;font-size:21px}.dock button:hover{background:#ffffff17}.dock .question{background:linear-gradient(140deg,#154b91,#263c7c);font-size:27px}.status{position:absolute;right:28px;display:flex;gap:10px;color:var(--muted);font-size:12px}
+.notice{position:absolute;left:50%;top:18px;transform:translateX(-50%);background:#07132bea;border:1px solid var(--line);padding:9px 14px;border-radius:12px;color:var(--muted);display:none}
+@media(max-width:700px){.desktop{padding:12px}.brand{top:8%;}.widgets{width:190px;margin-top:auto;margin-bottom:75px}.widget{padding:12px}.clock{font-size:24px}.launcher{left:12px;bottom:82px;width:calc(100vw - 24px);grid-template-columns:100px 1fr;padding:12px}.appgrid{grid-template-columns:repeat(2,1fr)}.dock{left:8px;right:8px;gap:0}.dock button{width:38px}.status{display:none}.shortcuts{gap:5px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="desktop">
+<header class="brand"><h1>UNNAMED OS</h1><p>Lightweight at heart. Beautiful by design.</p></header>
+<div class="shortcuts" aria-label="Desktop shortcuts"><button class="shortcut" data-app="Files"><span class="glyph">▰</span>Files</button><button class="shortcut" data-app="Trash"><span class="glyph">⌑</span>Trash</button><button class="shortcut" data-app="Home"><span class="glyph">⌂</span>Home</button><button class="shortcut" data-app="Software"><span class="glyph">◇</span>Software</button></div>
+<section class="widgets">
+<div class="panel widget"><div class="clock" id="clock">--:--</div><div class="sub" id="date"></div><div style="margin-top:12px">☀ &nbsp; 24°C <span class="sub">Clear skies (demo)</span></div></div>
+<div class="panel widget"><strong>⌁ &nbsp; System snapshot</strong><p class="sub">Illustrative values only</p><div>Processor</div><div class="meter"><span style="width:18%"></span></div><div>Memory</div><div class="meter"><span style="width:42%"></span></div><div>Storage</div><div class="meter"><span style="width:28%"></span></div></div>
+<div class="panel widget"><strong>Quick controls</strong><div class="quickrow">Wi-Fi <button class="switch on" aria-label="Toggle Wi-Fi"></button></div><div class="quickrow">Bluetooth <button class="switch on" aria-label="Toggle Bluetooth"></button></div><div class="quickrow">Dark appearance <button class="switch on" aria-label="Toggle dark appearance"></button></div><div class="quickrow">Quiet mode <button class="switch" aria-label="Toggle quiet mode"></button></div><div class="quickrow">Brightness <input aria-label="Brightness" type="range" min="20" max="100" value="75"></div></div>
+</section>
+<section class="panel launcher" id="launcher" aria-label="Application launcher">
+<input class="search" id="search" placeholder="⌕  Search apps…" aria-label="Search applications">
+<nav class="side"><button>⌂ &nbsp; Home</button><button>▦ &nbsp; All apps</button><button>⚙ &nbsp; Settings</button><button>⏻ &nbsp; Power</button><button>ⓘ &nbsp; About</button></nav>
+<div class="apps"><h3>Pinned applications</h3><div class="appgrid" id="appgrid"><button class="app" data-app="Files"><span class="glyph">▰</span>Files</button><button class="app" data-app="Terminal"><span class="glyph">›_</span>Terminal</button><button class="app" data-app="Web"><span class="glyph">◎</span>Web</button><button class="app" data-app="Settings"><span class="glyph">⚙</span>Settings</button><button class="app" data-app="Software"><span class="glyph">◇</span>Software</button><button class="app" data-app="Calculator"><span class="glyph">▦</span>Calculator</button><button class="app" data-app="Notes"><span class="glyph">✎</span>Notes</button><button class="app" data-app="Monitor"><span class="glyph">⌁</span>Monitor</button></div><h3 style="margin-top:22px">Welcome</h3><p class="sub">This interactive shell concept is a UI prototype—not a real OS session.</p></div>
+</section>
+<div class="panel dock"><button class="question" id="toggle" aria-label="Open launcher">?</button><button id="searchbtn" aria-label="Search">⌕</button><button data-app="Files" aria-label="Files">▰</button><button data-app="Terminal" aria-label="Terminal">›_</button><button data-app="Settings" aria-label="Settings">⚙</button><div class="status"><span>◈</span><span>◖</span><span>◧</span><span id="time2"></span></div></div>
+<div class="notice" id="notice" role="status"></div>
+</div>
+<script>
+const launcher=document.querySelector('#launcher'),search=document.querySelector('#search'),notice=document.querySelector('#notice');
+function toggle(){launcher.classList.toggle('open');if(launcher.classList.contains('open'))search.focus()}
+document.querySelector('#toggle').addEventListener('click',toggle);
+document.querySelector('#searchbtn').addEventListener('click',()=>{launcher.classList.add('open');search.focus()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')launcher.classList.remove('open');if((e.ctrlKey||e.metaKey)&&e.key===' ') {e.preventDefault();toggle()}});
+document.querySelectorAll('[data-app]').forEach(b=>b.addEventListener('click',()=>{notice.textContent=b.dataset.app+' — placeholder action in UI demo';notice.style.display='block';setTimeout(()=>notice.style.display='none',2200)}));
+document.querySelectorAll('.switch').forEach(b=>b.addEventListener('click',()=>b.classList.toggle('on')));
+search.addEventListener('input',()=>{const q=search.value.toLowerCase();document.querySelectorAll('#appgrid .app').forEach(a=>a.style.display=a.dataset.app.toLowerCase().includes(q)?'grid':'none')});
+function tick(){const d=new Date();document.querySelector('#clock').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});document.querySelector('#time2').textContent=d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});document.querySelector('#date').textContent=d.toLocaleDateString([], {weekday:'short',month:'short',day:'numeric',year:'numeric'})}tick();setInterval(tick,30000);
+</script>
+</body></html>
