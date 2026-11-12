@@ -16,37 +16,37 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install live-build dependencies
+      - name: Build Debian Bookworm live ISO in native Debian container
         run: |
-          sudo apt-get update
-          sudo apt-get install -y live-build debootstrap debian-archive-keyring \
-            squashfs-tools xorriso syslinux-common syslinux-utils \
-            grub-pc-bin grub-efi-amd64-bin
-      - name: Configure Debian live image
-        working-directory: prototype/live-build
-        run: |
-          sudo lb config \
-            --ignore-system-defaults \
-            --distribution bookworm \
-            --architectures amd64 \
-            --binary-image iso-hybrid \
-            --linux-packages linux-image \
-            --archive-areas "main contrib non-free-firmware" \
-            --keyring-packages debian-archive-keyring \
-            --mirror-bootstrap http://deb.debian.org/debian \
-            --mirror-chroot http://deb.debian.org/debian \
-            --mirror-chroot-security http://security.debian.org/debian-security \
-            --mirror-binary http://deb.debian.org/debian \
-            --mirror-binary-security http://security.debian.org/debian-security \
-            --bootappend-live "boot=live components quiet"
-      - name: Build ISO
-        working-directory: prototype/live-build
-        run: sudo lb build
+          docker run --privileged --rm \
+            -v "$GITHUB_WORKSPACE:/work" \
+            -w /work/prototype/live-build \
+            debian:bookworm bash -euxo pipefail -c '
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                live-build debootstrap debian-archive-keyring \
+                squashfs-tools xorriso syslinux-common syslinux-utils \
+                grub-pc-bin grub-efi-amd64-bin grub-efi-amd64-signed \
+                ca-certificates
+              lb config \
+                --distribution bookworm \
+                --architectures amd64 \
+                --binary-image iso-hybrid \
+                --linux-packages linux-image \
+                --archive-areas "main contrib non-free-firmware" \
+                --keyring-packages debian-archive-keyring \
+                --mirror-bootstrap https://deb.debian.org/debian \
+                --mirror-chroot https://deb.debian.org/debian \
+                --mirror-chroot-security https://security.debian.org/debian-security \
+                --mirror-binary https://deb.debian.org/debian \
+                --mirror-binary-security https://security.debian.org/debian-security \
+                --bootappend-live "boot=live components quiet"
+              lb build
+            '
       - name: Collect image
         run: |
           mkdir -p out
-          sudo cp prototype/live-build/live-image-amd64.hybrid.iso out/unnamedos-prototype-amd64.iso
-          sudo chown "$USER":"$USER" out/unnamedos-prototype-amd64.iso
+          cp prototype/live-build/live-image-amd64.hybrid.iso out/unnamedos-prototype-amd64.iso
       - uses: actions/upload-artifact@v4
         with:
           name: unnamedos-prototype-amd64-iso
