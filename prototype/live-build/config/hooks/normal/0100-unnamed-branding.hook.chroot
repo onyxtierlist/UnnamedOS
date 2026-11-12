@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+# Lightweight identity marker for the early Debian live prototype.
+install -d /etc/unnamedos
+cat > /etc/unnamedos/build-info <<'EOF'
+UNNAMED OS
+Prototype 0.1 infrastructure image
+Debian Stable live base; custom desktop not integrated yet.
+EOF
