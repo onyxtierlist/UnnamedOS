@@ -1,0 +1,16 @@
+# Stage 0.1 bootable Debian desktop base (not yet UNNAMED shell-integrated)
+live-boot
+live-config
+live-config-systemd
+systemd-sysv
+network-manager
+pipewire
+wireplumber
+weston
+weston-terminal
+xwayland
+wayland-utils
+mesa-utils
+foot
+thunar
+xfce4-terminal
