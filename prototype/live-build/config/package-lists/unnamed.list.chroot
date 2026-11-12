@@ -7,7 +7,6 @@ network-manager
 pipewire
 wireplumber
 weston
-weston-terminal
 xwayland
 wayland-utils
 mesa-utils
