@@ -1,0 +1,29 @@
+name: Kimi API connection test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-kimi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Kimi API (smoke test)
+        env:
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KIMI_API_KEY:-}" ]; then
+            echo "::error::Missing repository secret KIMI_API_KEY. Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+          response="$(curl --silent --show-error --fail-with-body \
+            https://api.moonshot.ai/v1/chat/completions \
+            -H "Authorization: Bearer ${KIMI_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{"model":"kimi-k3","messages":[{"role":"user","content":"Reply with exactly: KIMI CONNECTION OK"}],"max_completion_tokens":40}')"
+
+          echo "$response" | jq -r '.choices[0].message.content // .error.message // "Unexpected response format"'
