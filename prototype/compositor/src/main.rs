@@ -131,9 +131,12 @@ fn run_winit() -> Result<(), Box<dyn std::error::Error>> {
     let start_time = std::time::Instant::now();
     let keyboard = state.seat.add_keyboard(Default::default(), 200, 200)?;
 
-    // This is a nested test compositor. Set the client display only for child processes.
-    unsafe { std::env::set_var("WAYLAND_DISPLAY", socket_name); }
-    if std::process::Command::new("weston-terminal").spawn().is_err() {
+    // Keep WAYLAND_DISPLAY scoped to the child client. Mutating the compositor's
+    // process-wide environment can affect unrelated threads and subprocesses.
+    if std::process::Command::new("weston-terminal")
+        .env("WAYLAND_DISPLAY", socket_name)
+        .spawn()
+        .is_err() {
         tracing::info!("weston-terminal not found; start a Wayland client with WAYLAND_DISPLAY={socket_name}");
     }
 
