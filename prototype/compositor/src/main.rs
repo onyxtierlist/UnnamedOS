@@ -2,11 +2,13 @@
 // Initial protocol/render loop adapted from Smithay's MIT-licensed minimal example:
 // https://github.com/Smithay/smithay/blob/master/examples/minimal.rs
 
-use std::sync::Arc;
+use std::{os::unix::io::OwnedFd, sync::Arc};
+
+use ::winit::platform::pump_events::PumpStatus;
 
 use smithay::{
     backend::{
-        input::{InputEvent, InputTime, KeyboardKeyEvent},
+        input::{InputEvent, KeyboardKeyEvent},
         renderer::{
             Color32F, Frame, Renderer,
             element::{
@@ -18,6 +20,7 @@ use smithay::{
         },
         winit::{self, WinitEvent},
     },
+    delegate_compositor, delegate_data_device, delegate_seat, delegate_shm, delegate_xdg_shell,
     input::{Seat, SeatHandler, SeatState, keyboard::FilterResult},
     reexports::wayland_server::{Display, protocol::wl_seat},
     utils::{Rectangle, Serial, Transform},
@@ -27,10 +30,9 @@ use smithay::{
             CompositorClientState, CompositorHandler, CompositorState, SurfaceAttributes,
             TraversalAction, with_surface_tree_downward,
         },
-        pointer_constraints::PointerConstraintsHandler,
         selection::{
             SelectionHandler,
-            data_device::{DataDeviceHandler, DataDeviceState, WaylandDndGrabHandler},
+            data_device::{ClientDndGrabHandler, DataDeviceHandler, DataDeviceState, ServerDndGrabHandler},
         },
         shell::xdg::{PopupSurface, PositionerState, ToplevelSurface, XdgShellHandler, XdgShellState},
         shm::{ShmHandler, ShmState},
@@ -63,9 +65,12 @@ impl XdgShellHandler for App {
 impl SelectionHandler for App { type SelectionUserData = (); }
 
 impl DataDeviceHandler for App {
-    fn data_device_state(&mut self) -> &mut DataDeviceState { &mut self.data_device_state }
+    fn data_device_state(&self) -> &DataDeviceState { &self.data_device_state }
 }
-impl WaylandDndGrabHandler for App {}
+impl ClientDndGrabHandler for App {}
+impl ServerDndGrabHandler for App {
+    fn send(&mut self, _mime_type: String, _fd: OwnedFd, _seat: Seat<Self>) {}
+}
 
 impl CompositorHandler for App {
     fn compositor_state(&mut self) -> &mut CompositorState { &mut self.compositor_state }
@@ -87,7 +92,6 @@ impl SeatHandler for App {
     fn focus_changed(&mut self, _seat: &Seat<Self>, _focused: Option<&WlSurface>) {}
     fn cursor_image(&mut self, _seat: &Seat<Self>, _image: smithay::input::pointer::CursorImageStatus) {}
 }
-impl PointerConstraintsHandler for App {}
 
 struct App {
     compositor_state: CompositorState,
@@ -131,9 +135,12 @@ fn run_winit() -> Result<(), Box<dyn std::error::Error>> {
     let start_time = std::time::Instant::now();
     let keyboard = state.seat.add_keyboard(Default::default(), 200, 200)?;
 
-    // This is a nested test compositor. Set the client display only for child processes.
-    unsafe { std::env::set_var("WAYLAND_DISPLAY", socket_name); }
-    if std::process::Command::new("weston-terminal").spawn().is_err() {
+    // Keep WAYLAND_DISPLAY scoped to the child client. Mutating the compositor's
+    // process-wide environment can affect unrelated threads and subprocesses.
+    if std::process::Command::new("weston-terminal")
+        .env("WAYLAND_DISPLAY", socket_name)
+        .spawn()
+        .is_err() {
         tracing::info!("weston-terminal not found; start a Wayland client with WAYLAND_DISPLAY={socket_name}");
     }
 
@@ -143,19 +150,22 @@ fn run_winit() -> Result<(), Box<dyn std::error::Error>> {
             WinitEvent::Input(event) => match event {
                 InputEvent::Keyboard { event } => keyboard.input::<(), _>(
                     &mut state, event.key_code(), event.state(), 0.into(),
-                    InputTime::now(), |_, _, _| FilterResult::Forward,
+                    0, |_, _, _| FilterResult::Forward,
                 ),
                 InputEvent::PointerMotionAbsolute { .. } => {
                     if let Some(surface) = state.xdg_shell_state.toplevel_surfaces().iter().next().cloned() {
                         keyboard.set_focus(&mut state, Some(surface.wl_surface().clone()), 0.into());
                     }
-                }
+                },
                 _ => {}
             },
             _ => (),
         });
 
-        if let winit::PumpStatus::Exit(_) = status { return Ok(()); }
+        match status {
+            PumpStatus::Continue => {}
+            PumpStatus::Exit(_) => return Ok(()),
+        }
 
         let size = backend.window_size();
         let damage = Rectangle::from_size(size);
@@ -205,4 +215,8 @@ impl ClientData for ClientState {
     fn disconnected(&self, _client_id: ClientId, _reason: DisconnectReason) { tracing::info!("Wayland client disconnected"); }
 }
 
-smithay::delegate_dispatch2!(App);
+delegate_xdg_shell!(App);
+delegate_compositor!(App);
+delegate_shm!(App);
+delegate_seat!(App);
+delegate_data_device!(App);

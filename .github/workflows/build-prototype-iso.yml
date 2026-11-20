@@ -3,7 +3,7 @@ name: UNNAMED OS prototype ISO
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, "gpt6/stage1-env-safety"]
     paths:
       - "prototype/live-build/**"
       - ".github/workflows/build-prototype-iso.yml"

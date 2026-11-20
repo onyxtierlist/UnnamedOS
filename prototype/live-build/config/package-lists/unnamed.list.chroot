@@ -1,15 +1,30 @@
-# Stage 0.1 bootable Debian desktop base (not yet UNNAMED shell-integrated)
+# Debian live base with a usable graphical desktop while the native UNNAMED shell is developed.
 live-boot
 live-config
 live-config-systemd
 systemd-sysv
 network-manager
+network-manager-gnome
 pipewire
 wireplumber
+pavucontrol
 weston
 xwayland
 wayland-utils
 mesa-utils
-foot
-thunar
+# XFCE is the temporary functional desktop foundation; it is not the final UNNAMED shell.
+xfce4
+xfce4-goodies
 xfce4-terminal
+thunar
+thunar-volman
+gvfs
+udisks2
+lightdm
+lightdm-gtk-greeter
+polkitd
+policykit-1-gnome
+firefox-esr
+sudo
+fonts-inter
+papirus-icon-theme
