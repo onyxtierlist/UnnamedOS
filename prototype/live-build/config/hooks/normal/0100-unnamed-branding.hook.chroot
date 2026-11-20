@@ -1,9 +1,29 @@
 #!/bin/sh
 set -e
+
 # Lightweight identity marker for the early Debian live prototype.
 install -d /etc/unnamedos
 cat > /etc/unnamedos/build-info <<'EOF'
 UNNAMED OS
-Prototype 0.1 infrastructure image
-Debian Stable live base; custom desktop not integrated yet.
+Prototype 0.2 usable live desktop foundation
+Debian Bookworm live base with XFCE. The native UNNAMED desktop shell is still in development.
+EOF
+
+# Boot into a usable XFCE session for the live user.
+# This is a temporary desktop foundation, not the final custom UNNAMED shell.
+install -d /etc/lightdm/lightdm.conf.d
+cat > /etc/lightdm/lightdm.conf.d/99-unnamedos.conf <<'EOF'
+[Seat:*]
+greeter-session=lightdm-gtk-greeter
+user-session=xfce
+autologin-user=user
+autologin-user-timeout=0
+autologin-session=xfce
+EOF
+
+# Give the greeter a restrained UNNAMED OS identity without changing the host.
+install -d /etc/issue.d
+cat > /etc/issue.d/unnamedos.issue <<'EOF'
+UNNAMED OS — Prototype 0.2
+Debian live desktop foundation
 EOF
