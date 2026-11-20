@@ -4,7 +4,7 @@
 
 UNNAMED OS is an ambitious, Debian-based Linux distribution with an original desktop environment, a carefully engineered adaptive visual system, and deep user customization. The goal is not to reskin an existing desktop: it is to build a distinct, cohesive operating-system experience while reusing mature Linux infrastructure for hardware, networking, audio, security, and package management.
 
-**Status:** Stage 1 — compositor feasibility prototype. The project is still experimental and is not a bootable OS yet.
+**Status:** Stage 1 — compositor feasibility prototype. A Debian live-image pipeline is being expanded into a usable XFCE desktop foundation (Prototype 0.2); VM boot and interaction validation are still required. The native UNNAMED desktop shell is not implemented yet.
 
 ## Vision
 
